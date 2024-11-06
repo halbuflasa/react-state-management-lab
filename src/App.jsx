@@ -4,6 +4,8 @@ import { useState} from 'react'
 const App = () => {
   const [team, setTeam] = useState([]);
   const [money, setMoney] = useState(100);
+  const [totalStrength, setTotalStrength] = useState(0);
+  const [totalAgility, setTotalAgility] = useState(0);
   const [zombieFighters, setZombieFighters] = useState(
     [
       {
@@ -82,16 +84,52 @@ const App = () => {
     if (money >= fighter.price){
        setTeam([...team, fighter]);
        setMoney(money - fighter.price );
+       setTotalStrength(totalStrength + fighter.strength );
+       setTotalAgility(totalAgility + fighter.agility)
     }
     else {
       console.log("Not enough money");
     }
   };
+
+  const handleRemoveFighter = (fighter) => {
+    const newTeam = team.filter((member) => member !== fighter);
+    setTeam(newTeam);
+    setMoney(money + fighter.price);
+
+    const updatedTotalStrength = newTeam.reduce((total, member) => total + member.strength, 0);
+    const updatedTotalAgility = newTeam.reduce((total, member) => total + member.agility, 0);
+
+    setTotalStrength(updatedTotalStrength);
+    setTotalAgility(updatedTotalAgility);
+  };
+
+
+
   return (
     <>
       <h1>Zombie Fighters</h1>
-      <h2>Money: {money}</h2>
-      <h2>Fighters</h2>
+      <h3>Money: {money}</h3>
+      <h3>Team Strength: {totalStrength}</h3>
+      <h3>Team Agility: {totalAgility}</h3>
+
+      <h3>Team</h3>
+      {team.length === 0 ?(<p>Pick some team members!</p>
+      ) : (
+        <ul>
+          {team.map((fighter, index) => (
+          <li key={index} >
+            <img src={fighter.img} alt={fighter.name} />
+            <p>{fighter.name}</p>
+            <p>Price: {fighter.price}</p>
+            <p>Strength: {fighter.strength}</p>
+            <p>Agility: {fighter.agility}</p>
+            <button onClick={() => handleRemoveFighter(fighter)}>Remove</button>
+          </li>
+        ))}
+      </ul>
+      )}
+      <h3>Fighters</h3>
       <ul>
         {zombieFighters.map((fighter, index) => (
           <li key={index} >
