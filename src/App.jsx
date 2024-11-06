@@ -1,3 +1,6 @@
+import './App.css'
+import { useState} from 'react'
+
 const App = () => {
   const [team, setTeam] = useState([]);
   const [money, setMoney] = useState(100);
@@ -75,8 +78,38 @@ const App = () => {
       },
     ]
   );
+  const handleAddFighter = (fighter) =>{
+    if (money >= fighter.price){
+       setTeam([...team, fighter]);
+       setMoney(money - fighter.price );
+    }
+    else {
+      console.log("Not enough money");
+    }
+  };
   return (
-    <h1>Hello world!</h1>
+    <>
+      <h1>Zombie Fighters</h1>
+      <h2>Money: {money}</h2>
+      <h2>Fighters</h2>
+      <ul>
+        {zombieFighters.map((fighter, index) => (
+          <li key={index} >
+            <img src={fighter.img} alt={fighter.name} />
+            <p>{fighter.name}</p>
+            <p>Price: {fighter.price}</p>
+            <p>Strength: {fighter.strength}</p>
+            <p>Agility: {fighter.agility}</p>
+            <button onClick={() => handleAddFighter(fighter)}>Add</button>
+          </li>
+        ))}
+      </ul>
+     
+    
+    </>
+    
+    
+ 
   );
 }
 
